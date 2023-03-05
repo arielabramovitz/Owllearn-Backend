@@ -347,7 +347,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnDecksEditLambdaFunction:
         Type: AWS::Serverless::Function
@@ -358,7 +358,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnDecksCreateLambdaFunction:
         Type: AWS::Serverless::Function
@@ -369,7 +369,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnDecksDeleteLambdaFunction:
         Type: AWS::Serverless::Function
@@ -380,7 +380,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnDeckPreviewsGetLambdaFunction:
         Type: AWS::Serverless::Function
@@ -391,7 +391,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnDeckPreviewsEditLambdaFunction:
         Type: AWS::Serverless::Function
@@ -402,7 +402,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnDeckPreviewsCreateLambdaFunction:
         Type: AWS::Serverless::Function
@@ -413,7 +413,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnDeckPreviewsDeleteLambdaFunction:
         Type: AWS::Serverless::Function
@@ -424,7 +424,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnCardsGetLambdaFunction:
         Type: AWS::Serverless::Function
@@ -435,7 +435,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnCardsEditLambdaFunction:
         Type: AWS::Serverless::Function
@@ -446,7 +446,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnCardsCreateLambdaFunction:
         Type: AWS::Serverless::Function
@@ -457,7 +457,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
     OwllearnCardsDeleteLambdaFunction:
         Type: AWS::Serverless::Function
@@ -468,7 +468,7 @@ Resources:
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
-                Key: Owllearn-code-package.zip
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
 
     OwllearnRestAPI:
@@ -484,18 +484,7 @@ Resources:
             ParentId: !GetAtt OwllearnRestAPI.RootResourceId
             PathPart: decks
 
-    OwllearnApiDeployment:
-        Type: AWS::ApiGateway::Deployment
-        Properties:
-            RestApiId: !Ref OwllearnRestAPI
-
-    OwllearnApiStage:
-        Type: AWS::ApiGateway::Stage
-        Properties:
-            DeploymentId: !Ref OwllearnApiDeployment
-            RestApiId: !Ref OwllearnRestAPI
-            StageName: prod
-
+    
     OwllearnDeckPreviewsApiResource:
         Type: AWS::ApiGateway::Resource
         Properties:
@@ -715,3 +704,28 @@ Resources:
             Action: lambda:InvokeFunction
             FunctionName: !GetAtt OwllearnCardsDeleteLambdaFunction.Arn
             Principal: apigateway.amazonaws.com
+
+    OwllearnApiDeployment:
+        Type: AWS::ApiGateway::Deployment
+        DependsOn:
+        - OwllearnGetDecksMethod
+        - OwllearnDeleteDecksMethod
+        - OwllearnCreateDecksMethod
+        - OwllearnEditDecksMethod
+        - OwllearnGetDeckPreviewsMethod
+        - OwllearnDeleteDeckPreviewsMethod
+        - OwllearnCreateDeckPreviewsMethod
+        - OwllearnEditDeckPreviewsMethod
+        - OwllearnGetCardsMethod
+        - OwllearnDeleteCardsMethod
+        - OwllearnCreateCardsMethod
+        - OwllearnEditCardsMethod
+        Properties:
+            RestApiId: !Ref OwllearnRestAPI
+
+    OwllearnApiStage:
+        Type: AWS::ApiGateway::Stage
+        Properties:
+            DeploymentId: !Ref OwllearnApiDeployment
+            RestApiId: !Ref OwllearnRestAPI
+            StageName: prod

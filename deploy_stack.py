@@ -216,7 +216,7 @@ def _get_stack_status(stack_name_to_check: str) -> Optional[str]:
 
 def deploy_code_package(now_ms: int) -> None:
     bucket_name = "huji-lightricks-owllearn-code-bucket"
-    key = "Owllearn-code-package.zip"
+    key = f"Owllearn-{str(now_ms)}-code-package.zip"
     config = Config(connect_timeout=10, read_timeout=10, retries={"total_max_attempts": 20})
     s3_client = boto3.client("s3", region_name=AWS_REGION, config=config)
 
