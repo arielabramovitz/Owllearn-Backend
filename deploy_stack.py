@@ -339,6 +339,8 @@ def main() -> None:
 
         deploy_code_package( now_ms=now_ms)
 
+        # commented out the infrastructure deployment to only deploy lambda changes
+        
         deploy_cloudformation_template(
             now_ms=now_ms,
             stack_name="huji-lightricks-owllearn-resources",

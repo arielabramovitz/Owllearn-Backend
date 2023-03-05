@@ -346,9 +346,8 @@ Resources:
             Role: !GetAtt OwllearnDecksGetRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnDecksEditLambdaFunction:
         Type: AWS::Serverless::Function
@@ -358,9 +357,8 @@ Resources:
             Role: !GetAtt OwllearnDecksEditRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnDecksCreateLambdaFunction:
         Type: AWS::Serverless::Function
@@ -370,9 +368,8 @@ Resources:
             Role: !GetAtt OwllearnDecksCreateRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnDecksDeleteLambdaFunction:
         Type: AWS::Serverless::Function
@@ -382,9 +379,8 @@ Resources:
             Role: !GetAtt OwllearnDecksDeleteRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnDeckPreviewsGetLambdaFunction:
         Type: AWS::Serverless::Function
@@ -394,9 +390,8 @@ Resources:
             Role: !GetAtt OwllearnDeckPreviewsGetRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnDeckPreviewsEditLambdaFunction:
         Type: AWS::Serverless::Function
@@ -406,9 +401,8 @@ Resources:
             Role: !GetAtt OwllearnDeckPreviewsEditRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnDeckPreviewsCreateLambdaFunction:
         Type: AWS::Serverless::Function
@@ -418,9 +412,8 @@ Resources:
             Role: !GetAtt OwllearnDeckPreviewsCreateRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnDeckPreviewsDeleteLambdaFunction:
         Type: AWS::Serverless::Function
@@ -430,9 +423,8 @@ Resources:
             Role: !GetAtt OwllearnDeckPreviewsDeleteRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnCardsGetLambdaFunction:
         Type: AWS::Serverless::Function
@@ -442,9 +434,8 @@ Resources:
             Role: !GetAtt OwllearnCardsGetRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnCardsEditLambdaFunction:
         Type: AWS::Serverless::Function
@@ -454,9 +445,8 @@ Resources:
             Role: !GetAtt OwllearnCardsEditRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnCardsCreateLambdaFunction:
         Type: AWS::Serverless::Function
@@ -466,9 +456,8 @@ Resources:
             Role: !GetAtt OwllearnCardsCreateRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
     OwllearnCardsDeleteLambdaFunction:
         Type: AWS::Serverless::Function
@@ -478,9 +467,8 @@ Resources:
             Role: !GetAtt OwllearnCardsDeleteRole.Arn
             Timeout: 10
             CodeUri:
-                Bucket:
-                    Fn::ImportValue: huji-lightricks-owllearn-code-bucket-name
-                Key: !Sub Owllearn-code-package.zip
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: Owllearn-code-package.zip
             Runtime: python3.8
 
     OwllearnRestAPI:
