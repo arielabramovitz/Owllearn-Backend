@@ -496,6 +496,18 @@ Resources:
             ParentId: !GetAtt OwllearnRestAPI.RootResourceId
             PathPart: decks
 
+    OwllearnApiDeployment:
+        Type: AWS::ApiGateway::Deployment
+        Properties:
+            RestApiId: !Ref OwllearnRestAPI
+
+    OwllearnApiStage:
+        Type: AWS::ApiGateway::Stage
+        Properties:
+            DeploymentId: !Ref OwllearnApiDeployment
+            RestApiId: !Ref OwllearnRestAPI
+            StageName: prod
+
     OwllearnDeckPreviewsApiResource:
         Type: AWS::ApiGateway::Resource
         Properties:
