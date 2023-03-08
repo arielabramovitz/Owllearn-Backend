@@ -72,7 +72,9 @@ Resources:
                       Version: 2012-10-17
                       Statement:
                           - Effect: Allow
-                            Action: dynamodb:GetItem
+                            Action:
+                                - dynamodb:GetItem
+                                - dynamodb:Query
                             Resource: !GetAtt OwllearnDecksTable.Arn
     OwllearnDecksEditRole:
         Type: AWS::IAM::Role
@@ -95,9 +97,25 @@ Resources:
                       Statement:
                           - Effect: Allow
                             Action:
-                                - dynamodb:UpdateItem
+                                - dynamodb:GetItem
+                                - dynamodb:PutItem
                             Resource:
                                 - !GetAtt OwllearnDecksTable.Arn
+                          - Effect: Allow
+                            Action:
+                                - dynamodb:GetItem
+                                - dynamodb:PutItem
+                            Resource:
+                                - !GetAtt OwllearnDeckPreviewsTable.Arn
+                          - Effect: Allow
+                            Action:
+                                - dynamodb:GetItem
+                                - dynamodb:DeleteItem
+                                - dynamodb:PutItem
+                                - dynamodb:BatchWriteItem
+                            Resource:
+                                - !GetAtt OwllearnCardsTable.Arn
+
     OwllearnDecksCreateRole:
         Type: AWS::IAM::Role
         Properties:
@@ -122,6 +140,11 @@ Resources:
                                 - dynamodb:PutItem
                             Resource:
                                 - !GetAtt OwllearnDecksTable.Arn
+                          - Effect: Allow
+                            Action:
+                                - dynamodb:PutItem
+                            Resource:
+                                - !GetAtt OwllearnDeckPreviewsTable.Arn
     OwllearnDecksDeleteRole:
         Type: AWS::IAM::Role
         Properties:
@@ -144,32 +167,24 @@ Resources:
                           - Effect: Allow
                             Action:
                                 - dynamodb:DeleteItem
+                                - dynamodb:GetItem
                             Resource:
                                 - !GetAtt OwllearnDecksTable.Arn
-    OwllearnDeckPreviewsGetRole:
-        Type: AWS::IAM::Role
-        Properties:
-            RoleName: huji-lightricks-owllearn-deck-previews-get-role
-            AssumeRolePolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - lambda.amazonaws.com
-                      Action: sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-            Policies:
-                - PolicyName: huji-lightricks-owllearn-deck-previews-get-policy
-                  PolicyDocument:
-                      Version: 2012-10-17
-                      Statement:
                           - Effect: Allow
                             Action:
+                                - dynamodb:DeleteItem
                                 - dynamodb:GetItem
                             Resource:
                                 - !GetAtt OwllearnDeckPreviewsTable.Arn
+                          - Effect: Allow
+                            Action:
+                                - dynamodb:DeleteItem
+                                - dynamodb:GetItem
+                                - dynamodb:BatchWriteItem
+                                - dynamodb:Query
+                            Resource:
+                                - !GetAtt OwllearnCardsTable.Arn
+
     OwllearnDeckPreviewsEditRole:
         Type: AWS::IAM::Role
         Properties:
@@ -194,150 +209,7 @@ Resources:
                                 - dynamodb:UpdateItem
                             Resource:
                                 - !GetAtt OwllearnDeckPreviewsTable.Arn
-    OwllearnDeckPreviewsCreateRole:
-        Type: AWS::IAM::Role
-        Properties:
-            RoleName: huji-lightricks-owllearn-deck-previews-create-role
-            AssumeRolePolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - lambda.amazonaws.com
-                      Action: sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-            Policies:
-                - PolicyName: huji-lightricks-owllearn-deck-previews-create-policy
-                  PolicyDocument:
-                      Version: 2012-10-17
-                      Statement:
-                          - Effect: Allow
-                            Action:
-                                - dynamodb:PutItem
-                            Resource:
-                                - !GetAtt OwllearnDeckPreviewsTable.Arn
-    OwllearnDeckPreviewsDeleteRole:
-        Type: AWS::IAM::Role
-        Properties:
-            RoleName: huji-lightricks-owllearn-deck-previews-delete-role
-            AssumeRolePolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - lambda.amazonaws.com
-                      Action: sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-            Policies:
-                - PolicyName: huji-lightricks-owllearn-deck-previews-delete-policy
-                  PolicyDocument:
-                      Version: 2012-10-17
-                      Statement:
-                          - Effect: Allow
-                            Action:
-                                - dynamodb:DeleteItem
-                            Resource:
-                                - !GetAtt OwllearnDeckPreviewsTable.Arn
-    OwllearnCardsGetRole:
-        Type: AWS::IAM::Role
-        Properties:
-            RoleName: huji-lightricks-owllearn-cards-get-role
-            AssumeRolePolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - lambda.amazonaws.com
-                      Action: sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-            Policies:
-                - PolicyName: huji-lightricks-owllearn-cards-get-policy
-                  PolicyDocument:
-                      Version: 2012-10-17
-                      Statement:
-                          - Effect: Allow
-                            Action:
-                                - dynamodb:GetItem
-                            Resource:
-                                - !GetAtt OwllearnCardsTable.Arn
-    OwllearnCardsEditRole:
-        Type: AWS::IAM::Role
-        Properties:
-            RoleName: huji-lightricks-owllearn-cards-edit-role
-            AssumeRolePolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - lambda.amazonaws.com
-                      Action: sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-            Policies:
-                - PolicyName: huji-lightricks-owllearn-cards-edit-policy
-                  PolicyDocument:
-                      Version: 2012-10-17
-                      Statement:
-                          - Effect: Allow
-                            Action:
-                                - dynamodb:UpdateItem
-                            Resource:
-                                - !GetAtt OwllearnCardsTable.Arn
-    OwllearnCardsCreateRole:
-        Type: AWS::IAM::Role
-        Properties:
-            RoleName: huji-lightricks-owllearn-cards-create-role
-            AssumeRolePolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - lambda.amazonaws.com
-                      Action: sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-            Policies:
-                - PolicyName: huji-lightricks-owllearn-cards-create-policy
-                  PolicyDocument:
-                      Version: 2012-10-17
-                      Statement:
-                          - Effect: Allow
-                            Action:
-                                - dynamodb:PutItem
-                            Resource:
-                                - !GetAtt OwllearnCardsTable.Arn
-    OwllearnCardsDeleteRole:
-        Type: AWS::IAM::Role
-        Properties:
-            RoleName: huji-lightricks-owllearn-cards-delete-role
-            AssumeRolePolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    - Effect: Allow
-                      Principal:
-                          Service:
-                              - lambda.amazonaws.com
-                      Action: sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-            Policies:
-                - PolicyName: huji-lightricks-owllearn-cards-delete-policy
-                  PolicyDocument:
-                      Version: 2012-10-17
-                      Statement:
-                          - Effect: Allow
-                            Action:
-                                - dynamodb:DeleteItem
-                            Resource:
-                                - !GetAtt OwllearnCardsTable.Arn
+
     OwllearnDecksGetLambdaFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -382,89 +254,13 @@ Resources:
                 Bucket: huji-lightricks-owllearn-code-bucket
                 Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
             Runtime: python3.8
-    OwllearnDeckPreviewsGetLambdaFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: huji-lightricks-owllearn-deck-previews-get-lambda
-            Handler: lambdas.deck_previews_get.handler
-            Role: !GetAtt OwllearnDeckPreviewsGetRole.Arn
-            Timeout: 10
-            CodeUri:
-                Bucket: huji-lightricks-owllearn-code-bucket
-                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
-            Runtime: python3.8
+
     OwllearnDeckPreviewsEditLambdaFunction:
         Type: AWS::Serverless::Function
         Properties:
             FunctionName: huji-lightricks-owllearn-deck-previews-edit-lambda
             Handler: lambdas.deck_previews_edit.handler
             Role: !GetAtt OwllearnDeckPreviewsEditRole.Arn
-            Timeout: 10
-            CodeUri:
-                Bucket: huji-lightricks-owllearn-code-bucket
-                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
-            Runtime: python3.8
-    OwllearnDeckPreviewsCreateLambdaFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: huji-lightricks-owllearn-deck-previews-create-lambda
-            Handler: lambdas.deck_previews_create.handler
-            Role: !GetAtt OwllearnDeckPreviewsCreateRole.Arn
-            Timeout: 10
-            CodeUri:
-                Bucket: huji-lightricks-owllearn-code-bucket
-                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
-            Runtime: python3.8
-    OwllearnDeckPreviewsDeleteLambdaFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: huji-lightricks-owllearn-deck-previews-delete-lambda
-            Handler: lambdas.deck_previews_delete.handler
-            Role: !GetAtt OwllearnDeckPreviewsDeleteRole.Arn
-            Timeout: 10
-            CodeUri:
-                Bucket: huji-lightricks-owllearn-code-bucket
-                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
-            Runtime: python3.8
-    OwllearnCardsGetLambdaFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: huji-lightricks-owllearn-cards-get-lambda
-            Handler: lambdas.cards_get.handler
-            Role: !GetAtt OwllearnCardsGetRole.Arn
-            Timeout: 10
-            CodeUri:
-                Bucket: huji-lightricks-owllearn-code-bucket
-                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
-            Runtime: python3.8
-    OwllearnCardsEditLambdaFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: huji-lightricks-owllearn-cards-edit-lambda
-            Handler: lambdas.cards_edit.handler
-            Role: !GetAtt OwllearnCardsEditRole.Arn
-            Timeout: 10
-            CodeUri:
-                Bucket: huji-lightricks-owllearn-code-bucket
-                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
-            Runtime: python3.8
-    OwllearnCardsCreateLambdaFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: huji-lightricks-owllearn-cards-create-lambda
-            Handler: lambdas.cards_create.handler
-            Role: !GetAtt OwllearnCardsCreateRole.Arn
-            Timeout: 10
-            CodeUri:
-                Bucket: huji-lightricks-owllearn-code-bucket
-                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
-            Runtime: python3.8
-    OwllearnCardsDeleteLambdaFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            FunctionName: huji-lightricks-owllearn-cards-delete-lambda
-            Handler: lambdas.cards_delete.handler
-            Role: !GetAtt OwllearnCardsDeleteRole.Arn
             Timeout: 10
             CodeUri:
                 Bucket: huji-lightricks-owllearn-code-bucket
@@ -484,7 +280,6 @@ Resources:
             ParentId: !GetAtt OwllearnRestAPI.RootResourceId
             PathPart: decks
 
-    
     OwllearnDeckPreviewsApiResource:
         Type: AWS::ApiGateway::Resource
         Properties:
@@ -544,39 +339,7 @@ Resources:
                 Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnDecksEditLambdaFunction.Arn}/invocations"
             ResourceId: !Ref OwllearnDecksApiResource
             RestApiId: !Ref OwllearnRestAPI
-    OwllearnGetDeckPreviewsMethod:
-        Type: AWS::ApiGateway::Method
-        Properties:
-            AuthorizationType: NONE
-            HttpMethod: GET
-            Integration:
-                IntegrationHttpMethod: POST
-                Type: AWS_PROXY
-                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnDeckPreviewsGetLambdaFunction.Arn}/invocations"
-            ResourceId: !Ref OwllearnDeckPreviewsApiResource
-            RestApiId: !Ref OwllearnRestAPI
-    OwllearnDeleteDeckPreviewsMethod:
-        Type: AWS::ApiGateway::Method
-        Properties:
-            AuthorizationType: NONE
-            HttpMethod: DELETE
-            Integration:
-                IntegrationHttpMethod: POST
-                Type: AWS_PROXY
-                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnDeckPreviewsDeleteLambdaFunction.Arn}/invocations"
-            ResourceId: !Ref OwllearnDeckPreviewsApiResource
-            RestApiId: !Ref OwllearnRestAPI
-    OwllearnCreateDeckPreviewsMethod:
-        Type: AWS::ApiGateway::Method
-        Properties:
-            AuthorizationType: NONE
-            HttpMethod: POST
-            Integration:
-                IntegrationHttpMethod: POST
-                Type: AWS_PROXY
-                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnDeckPreviewsCreateLambdaFunction.Arn}/invocations"
-            ResourceId: !Ref OwllearnDeckPreviewsApiResource
-            RestApiId: !Ref OwllearnRestAPI
+
     OwllearnEditDeckPreviewsMethod:
         Type: AWS::ApiGateway::Method
         Properties:
@@ -588,50 +351,7 @@ Resources:
                 Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnDeckPreviewsEditLambdaFunction.Arn}/invocations"
             ResourceId: !Ref OwllearnDeckPreviewsApiResource
             RestApiId: !Ref OwllearnRestAPI
-    OwllearnGetCardsMethod:
-        Type: AWS::ApiGateway::Method
-        Properties:
-            AuthorizationType: NONE
-            HttpMethod: GET
-            Integration:
-                IntegrationHttpMethod: POST
-                Type: AWS_PROXY
-                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnCardsGetLambdaFunction.Arn}/invocations"
-            ResourceId: !Ref OwllearnCardsApiResource
-            RestApiId: !Ref OwllearnRestAPI
-    OwllearnDeleteCardsMethod:
-        Type: AWS::ApiGateway::Method
-        Properties:
-            AuthorizationType: NONE
-            HttpMethod: DELETE
-            Integration:
-                IntegrationHttpMethod: POST
-                Type: AWS_PROXY
-                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnCardsDeleteLambdaFunction.Arn}/invocations"
-            ResourceId: !Ref OwllearnCardsApiResource
-            RestApiId: !Ref OwllearnRestAPI
-    OwllearnCreateCardsMethod:
-        Type: AWS::ApiGateway::Method
-        Properties:
-            AuthorizationType: NONE
-            HttpMethod: POST
-            Integration:
-                IntegrationHttpMethod: POST
-                Type: AWS_PROXY
-                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnCardsCreateLambdaFunction.Arn}/invocations"
-            ResourceId: !Ref OwllearnCardsApiResource
-            RestApiId: !Ref OwllearnRestAPI
-    OwllearnEditCardsMethod:
-        Type: AWS::ApiGateway::Method
-        Properties:
-            AuthorizationType: NONE
-            HttpMethod: PUT
-            Integration:
-                IntegrationHttpMethod: POST
-                Type: AWS_PROXY
-                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnCardsEditLambdaFunction.Arn}/invocations"
-            ResourceId: !Ref OwllearnCardsApiResource
-            RestApiId: !Ref OwllearnRestAPI
+
     OwllearnLambdaInvokePermissionDecksGet:
         Type: AWS::Lambda::Permission
         Properties:
@@ -656,70 +376,22 @@ Resources:
             Action: lambda:InvokeFunction
             FunctionName: !GetAtt OwllearnDecksDeleteLambdaFunction.Arn
             Principal: apigateway.amazonaws.com
-    OwllearnLambdaInvokePermissionDeckPreviewsGet:
-        Type: AWS::Lambda::Permission
-        Properties:
-            Action: lambda:InvokeFunction
-            FunctionName: !GetAtt OwllearnDeckPreviewsGetLambdaFunction.Arn
-            Principal: apigateway.amazonaws.com
-    OwllearnLambdaInvokePermissionDeckPreviewsCreate:
-        Type: AWS::Lambda::Permission
-        Properties:
-            Action: lambda:InvokeFunction
-            FunctionName: !GetAtt OwllearnDeckPreviewsCreateLambdaFunction.Arn
-            Principal: apigateway.amazonaws.com
+
     OwllearnLambdaInvokePermissionDeckPreviewsEdit:
         Type: AWS::Lambda::Permission
         Properties:
             Action: lambda:InvokeFunction
             FunctionName: !GetAtt OwllearnDeckPreviewsEditLambdaFunction.Arn
             Principal: apigateway.amazonaws.com
-    OwllearnLambdaInvokePermissionDeckPreviewsDelete:
-        Type: AWS::Lambda::Permission
-        Properties:
-            Action: lambda:InvokeFunction
-            FunctionName: !GetAtt OwllearnDeckPreviewsDeleteLambdaFunction.Arn
-            Principal: apigateway.amazonaws.com
-    OwllearnLambdaInvokePermissionCardsGet:
-        Type: AWS::Lambda::Permission
-        Properties:
-            Action: lambda:InvokeFunction
-            FunctionName: !GetAtt OwllearnCardsGetLambdaFunction.Arn
-            Principal: apigateway.amazonaws.com
-    OwllearnLambdaInvokePermissionCardsCreate:
-        Type: AWS::Lambda::Permission
-        Properties:
-            Action: lambda:InvokeFunction
-            FunctionName: !GetAtt OwllearnCardsCreateLambdaFunction.Arn
-            Principal: apigateway.amazonaws.com
-    OwllearnLambdaInvokePermissionCardsEdit:
-        Type: AWS::Lambda::Permission
-        Properties:
-            Action: lambda:InvokeFunction
-            FunctionName: !GetAtt OwllearnCardsEditLambdaFunction.Arn
-            Principal: apigateway.amazonaws.com
-    OwllearnLambdaInvokePermissionCardsDelete:
-        Type: AWS::Lambda::Permission
-        Properties:
-            Action: lambda:InvokeFunction
-            FunctionName: !GetAtt OwllearnCardsDeleteLambdaFunction.Arn
-            Principal: apigateway.amazonaws.com
 
     OwllearnApiDeployment:
         Type: AWS::ApiGateway::Deployment
         DependsOn:
-        - OwllearnGetDecksMethod
-        - OwllearnDeleteDecksMethod
-        - OwllearnCreateDecksMethod
-        - OwllearnEditDecksMethod
-        - OwllearnGetDeckPreviewsMethod
-        - OwllearnDeleteDeckPreviewsMethod
-        - OwllearnCreateDeckPreviewsMethod
-        - OwllearnEditDeckPreviewsMethod
-        - OwllearnGetCardsMethod
-        - OwllearnDeleteCardsMethod
-        - OwllearnCreateCardsMethod
-        - OwllearnEditCardsMethod
+            - OwllearnGetDecksMethod
+            - OwllearnDeleteDecksMethod
+            - OwllearnCreateDecksMethod
+            - OwllearnEditDecksMethod
+            - OwllearnEditDeckPreviewsMethod
         Properties:
             RestApiId: !Ref OwllearnRestAPI
 
