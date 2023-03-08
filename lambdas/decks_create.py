@@ -12,10 +12,12 @@ def handler(event: Dict[str, Any], _: Any) -> Dict[str, Any]:
         deck_id = body['deckId']
         user_id = body['userId']
         deck_name = body['deckName']
-        deck = Deck(userId=user_id, deckId=deck_id, deckName=deck_name).save()
-        deck_preview = DeckPreview(userId=user_id, deckId=deck_id, deckName=deck_name).save()
+        deck = Deck(userId=user_id, deckId=deck_id, deckName=deck_name)
+        deck.save()
+        deck_preview = DeckPreview(userId=user_id, deckId=deck_id, deckName=deck_name)
+        deck_preview.save()
         return {
-            "statusCode": 200,
+            "statusCode": 201,
             "body": json.dumps(dict(deck.attribute_values))
         }
     except (PutError, JSONDecodeError, TypeError, KeyError) as e:

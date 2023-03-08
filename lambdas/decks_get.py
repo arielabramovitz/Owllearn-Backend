@@ -36,8 +36,4 @@ def handler(event: Dict[str, Any], _: Any) -> Dict[str, Any]:
             "statusCode": 400,
             "message": str(e)
         }
-        
-    
-    return {
-        "statusCode": 200
-    }
+
