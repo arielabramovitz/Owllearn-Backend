@@ -24,7 +24,8 @@ def test_get_deck_or_all_decks(deckId=None):
 
 def test_create_deck():
     deckName = "test-deck-0"
-    deckId =
+    url = f"{URL}/decks/?userId={TEST_USER_ID}"
+    
 
 
 if __name__ == "__main__":
