@@ -210,6 +210,44 @@ Resources:
                             Resource:
                                 - !GetAtt OwllearnDeckPreviewsTable.Arn
 
+    OwllearnDeckPreviewsGetRole:
+        Type: AWS::IAM::Role
+        Properties:
+            RoleName: huji-lightricks-owllearn-deck-previews-get-role
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service:
+                              - lambda.amazonaws.com
+                      Action: sts:AssumeRole
+            ManagedPolicyArns:
+                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+            Policies:
+                - PolicyName: huji-lightricks-owllearn-deck-previews-get-policy
+                  PolicyDocument:
+                      Version: 2012-10-17
+                      Statement:
+                          - Effect: Allow
+                            Action:
+                                - dynamodb:GetItem
+                                - dynamodb:Query
+                            Resource:
+                                - !GetAtt OwllearnDeckPreviewsTable.Arn
+
+    OwllearnDeckPreviewsGetLambdaFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: huji-lightricks-owllearn-deck-previews-get-lambda
+            Handler: lambdas.deck_previews_get.handler
+            Role: !GetAtt OwllearnDeckPreviewsGetRole.Arn
+            Timeout: 10
+            CodeUri:
+                Bucket: huji-lightricks-owllearn-code-bucket
+                Key: !Sub Owllearn-${CodePackageDate}-code-package.zip
+            Runtime: python3.8
+
     OwllearnDecksGetLambdaFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -287,12 +325,6 @@ Resources:
             ParentId: !GetAtt OwllearnRestAPI.RootResourceId
             PathPart: deck-previews
 
-    OwllearnCardsApiResource:
-        Type: AWS::ApiGateway::Resource
-        Properties:
-            RestApiId: !Ref OwllearnRestAPI
-            ParentId: !GetAtt OwllearnRestAPI.RootResourceId
-            PathPart: cards
 
     OwllearnGetDecksMethod:
         Type: AWS::ApiGateway::Method
@@ -352,6 +384,18 @@ Resources:
             ResourceId: !Ref OwllearnDeckPreviewsApiResource
             RestApiId: !Ref OwllearnRestAPI
 
+    OwllearnGetDeckPreviewsMethod:
+        Type: AWS::ApiGateway::Method
+        Properties:
+            AuthorizationType: NONE
+            HttpMethod: GET
+            Integration:
+                IntegrationHttpMethod: POST
+                Type: AWS_PROXY
+                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OwllearnDeckPreviewsGetLambdaFunction.Arn}/invocations"
+            ResourceId: !Ref OwllearnDeckPreviewsApiResource
+            RestApiId: !Ref OwllearnRestAPI
+
     OwllearnLambdaInvokePermissionDecksGet:
         Type: AWS::Lambda::Permission
         Properties:
@@ -384,6 +428,13 @@ Resources:
             FunctionName: !GetAtt OwllearnDeckPreviewsEditLambdaFunction.Arn
             Principal: apigateway.amazonaws.com
 
+    OwllearnLambdaInvokePermissionDeckPreviewsGet:
+        Type: AWS::Lambda::Permission
+        Properties:
+            Action: lambda:InvokeFunction
+            FunctionName: !GetAtt OwllearnDeckPreviewsGetLambdaFunction.Arn
+            Principal: apigateway.amazonaws.com
+
     OwllearnApiDeployment:
         Type: AWS::ApiGateway::Deployment
         DependsOn:
@@ -392,6 +443,7 @@ Resources:
             - OwllearnCreateDecksMethod
             - OwllearnEditDecksMethod
             - OwllearnEditDeckPreviewsMethod
+            - OwllearnGetDeckPreviewsMethod
         Properties:
             RestApiId: !Ref OwllearnRestAPI
 
