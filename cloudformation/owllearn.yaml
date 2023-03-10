@@ -206,9 +206,27 @@ Resources:
                       Statement:
                           - Effect: Allow
                             Action:
+                                - dynamodb:GetItem
+                                - dynamodb:PutItem
                                 - dynamodb:UpdateItem
                             Resource:
                                 - !GetAtt OwllearnDeckPreviewsTable.Arn
+                          - Effect: Allow
+                            Action:
+                                - dynamodb:GetItem
+                                - dynamodb:PutItem
+                                - dynamodb:UpdateItem
+                                - dynamodb:Query
+                            Resource:
+                                - !GetAtt OwllearnCardsTable.Arn
+                          - Effect: Allow
+                            Action:
+                                - dynamodb:GetItem
+                                - dynamodb:PutItem
+                                - dynamodb:UpdateItem
+
+                            Resource:
+                                - !GetAtt OwllearnDecksTable.Arn            
 
     OwllearnDeckPreviewsGetRole:
         Type: AWS::IAM::Role

@@ -36,7 +36,7 @@ class DeckPreview(Model):
     medium = NumberAttribute(default=0)
     hard = NumberAttribute(default=0)
     
-    def decrement_rank(self, rank):
+    def change_rank(self, rank):
         if rank == 'unmarked':
             self.unmarked -= 1
         elif rank == 'easy':
