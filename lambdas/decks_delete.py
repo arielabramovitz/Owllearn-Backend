@@ -12,9 +12,8 @@ def handler(event: Dict[str, Any], _: Any) -> Dict[str, Any]:
         
         cards = Card.query(deck_id)
         
-        with Card.batch_write() as batch:
-            for card in cards:
-                batch.delete({"deckId": card.deckId, "cardId": card.cardId})
+        for card in cards:
+            card.delete()
         
         deckPreview = DeckPreview.get(user_id, deck_id)
         deckPreview.delete()
